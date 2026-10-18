@@ -1,0 +1,464 @@
+{
+  "info": {
+    "_postman_id": "b3e9a18a-92e3-4d44-884d-e9c56fa769f1",
+    "name": "FoodieGo Food Order API (Tugas Pak Bonda - Kelas F)",
+    "description": "Koleksi API Lengkap untuk Aplikasi Pemesanan Makanan FoodieGo. Database terpisah menggunakan MySQL (Laragon).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Foods (Menu Makanan)",
+      "item": [
+        {
+          "name": "Get All Foods",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods",
+              "host": ["{{base_url}}"],
+              "path": ["foods"]
+            }
+          }
+        },
+        {
+          "name": "Filter Foods by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods?category=Mie",
+              "host": ["{{base_url}}"],
+              "path": ["foods"],
+              "query": [{"key": "category", "value": "Mie"}]
+            }
+          }
+        },
+        {
+          "name": "Filter Foods Popular Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods?is_popular=1",
+              "host": ["{{base_url}}"],
+              "path": ["foods"],
+              "query": [{"key": "is_popular", "value": "1"}]
+            }
+          }
+        },
+        {
+          "name": "Search Foods",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods?search=Geprek",
+              "host": ["{{base_url}}"],
+              "path": ["foods"],
+              "query": [{"key": "search", "value": "Geprek"}]
+            }
+          }
+        },
+        {
+          "name": "Get Food Detail by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods/1",
+              "host": ["{{base_url}}"],
+              "path": ["foods", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create New Food",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bebek Sinjay Sambal Pencit\",\n  \"restaurant_id\": 1,\n  \"category_id\": 4,\n  \"category\": \"Ayam\",\n  \"price\": 28000,\n  \"original_price\": 35000,\n  \"description\": \"Bebek goreng empuk dengan bumbu rempah gurih disajikan dengan sambal mangga pencit.\",\n  \"image_url\": \"https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&auto=format&fit=crop&q=80\",\n  \"delivery_time\": \"15-20 min\",\n  \"distance\": \"1.4 km\",\n  \"discount_badge\": \"Diskon 20%\",\n  \"is_popular\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/foods",
+              "host": ["{{base_url}}"],
+              "path": ["foods"]
+            }
+          }
+        },
+        {
+          "name": "Update Food by ID",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ayam Geprek Sambal Bawang Super Pedas\",\n  \"price\": 23000,\n  \"discount_badge\": \"Promo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/foods/1",
+              "host": ["{{base_url}}"],
+              "path": ["foods", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Food by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods/8",
+              "host": ["{{base_url}}"],
+              "path": ["foods", "8"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/2",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "2"]
+            }
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Burger & Snack\",\n  \"slug\": \"burger-snack\",\n  \"icon_name\": \"lunch_dining\",\n  \"color_hex\": \"#F97316\",\n  \"display_order\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Restaurants",
+      "item": [
+        {
+          "name": "Get All Restaurants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["restaurants"]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurant Detail & Menus",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/restaurants/1",
+              "host": ["{{base_url}}"],
+              "path": ["restaurants", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Cart (Keranjang)",
+      "item": [
+        {
+          "name": "Get Cart Items & Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": ["{{base_url}}"],
+              "path": ["cart"]
+            }
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"food_id\": 3,\n  \"quantity\": 2,\n  \"spicy_level\": \"Pedas 🌶️🌶️\",\n  \"toppings\": [\"Telur Mata Sapi\"],\n  \"notes\": \"Banyakin kuah kaldu\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/add",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "add"]
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3,\n  \"notes\": \"Kecap dipisah\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/update/1",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "update", "1"]
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cart/remove/1",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "remove", "1"]
+            }
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cart/clear",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "clear"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Orders & Live Tracking",
+      "item": [
+        {
+          "name": "Checkout Order",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address_id\": 1,\n  \"delivery_service\": \"Kurir Express Instan\",\n  \"payment_method\": \"GoPay\",\n  \"voucher_code\": \"HEMAT10K\",\n  \"notes\": \"Pagar hitam samping minimarket\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "checkout"]
+            }
+          }
+        },
+        {
+          "name": "Get Order History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Detail & Tracking Timeline",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_status\": \"ON_DELIVERY\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Auth & Profile",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ahmad.fauzan@email.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"email\": \"budi@email.com\",\n  \"password\": \"password123\",\n  \"phone\": \"081298765432\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ahmad Fauzan S.Kom\",\n  \"phone\": \"081299998888\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Addresses",
+      "item": [
+        {
+          "name": "Get Addresses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/addresses",
+              "host": ["{{base_url}}"],
+              "path": ["addresses"]
+            }
+          }
+        },
+        {
+          "name": "Create Address",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Kantor\",\n  \"recipient_name\": \"Ahmad Fauzan (Kantor)\",\n  \"phone\": \"081234567890\",\n  \"full_address\": \"Gedung Cyber 2 Lt. 14, Kuningan, Jakarta Selatan\",\n  \"notes\": \"Titip di resepsionis\",\n  \"is_default\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/addresses",
+              "host": ["{{base_url}}"],
+              "path": ["addresses"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Banners & Vouchers",
+      "item": [
+        {
+          "name": "Get Promo Banners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/banners",
+              "host": ["{{base_url}}"],
+              "path": ["banners"]
+            }
+          }
+        },
+        {
+          "name": "Get Vouchers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vouchers",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

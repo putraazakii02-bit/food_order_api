@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodieGo Web Catalog & API Dashboard - Tugas Pak Bonda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF5722;
+      --primary-dark: #E64A19;
+      --primary-light: #FFEDE8;
+      --secondary: #0F172A;
+      --surface: #FFFFFF;
+      --bg: #F8FAFC;
+      --border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --card-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+      --card-hover-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #FF5722 0%, #FF7043 100%);
+      color: white;
+      padding: 24px 32px;
+      box-shadow: 0 4px 20px rgba(255, 87, 34, 0.2);
+    }
+    .header-content {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand p {
+      opacity: 0.92;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-header {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: #FFF5F2;
+      transform: translateY(-2px);
+    }
+    .badge-status {
+      background: rgba(255,255,255,0.22);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1300px;
+      margin: 28px auto;
+      padding: 0 24px;
+    }
+
+    /* Top Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn:hover {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+    .nav-tab-btn.active {
+      color: white;
+      background: var(--primary);
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+    }
+    .nav-tab-btn .badge-count {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.08);
+    }
+    .nav-tab-btn.active .badge-count {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Filter & Search Bar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--secondary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pill:hover, .pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px 14px;
+      width: 280px;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-family: inherit;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+
+    /* Cards Grid */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+      margin-bottom: 40px;
+    }
+
+    .food-card {
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .food-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-hover-shadow);
+      border-color: #CBD5E1;
+    }
+
+    .card-thumb {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #E2E8F0;
+    }
+    .badge-discount {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #E11D48;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+    }
+    .badge-popular {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #FBBF24;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      backdrop-filter: blur(6px);
+    }
+
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-category {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--secondary);
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+    .card-resto {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.45;
+      margin-bottom: 14px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding-top: 10px;
+      border-top: 1px solid #F1F5F9;
+    }
+    .card-meta .rating {
+      color: #F59E0B;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .price-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .price-main {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .price-strike {
+      font-size: 11px;
+      color: #94A3B8;
+      text-decoration: line-through;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-action {
+      background: #F1F5F9;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--secondary);
+      transition: all 0.2s;
+    }
+    .btn-action:hover {
+      background: #E2E8F0;
+    }
+    .btn-action.delete {
+      color: #EF4444;
+      background: #FEE2E2;
+    }
+    .btn-action.delete:hover {
+      background: #FCA5A5;
+      color: white;
+    }
+
+    /* Resto Card */
+    .resto-card {
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: all 0.25s ease;
+    }
+    .resto-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-hover-shadow);
+    }
+    .resto-banner {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+    }
+    .resto-body {
+      padding: 16px;
+    }
+    .resto-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+    .resto-tagline {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .resto-info {
+      font-size: 12px;
+      color: #475569;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    /* Modal Form */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--surface);
+      border-radius: 20px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      animation: modalIn 0.25s ease-out;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+    .btn-close {
+      background: #F1F5F9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-muted);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--secondary);
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-main);
+      background: #F8FAFC;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-submit {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover {
+      background: var(--primary-dark);
+    }
+    .btn-cancel {
+      background: #F1F5F9;
+      color: var(--text-muted);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      animation: toastIn 0.3s ease;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Dev Tester Box */
+    .tester-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .endpoint-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .endpoint-head {
+      padding: 12px 16px;
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+    .tag-get { background: #10B981; color: white; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+    .tag-post { background: #3B82F6; color: white; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+    .tag-put { background: #F59E0B; color: white; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+    .tag-del { background: #EF4444; color: white; padding: 2px 8px; border-radius: 6px; font-weight: bold; }
+    .res-box {
+      background: #0F172A;
+      color: #E2E8F0;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      max-height: 250px;
+      overflow-y: auto;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="brand">
+        <h1>🍕 FoodieGo Web Management</h1>
+        <p>Live Web Catalog & REST API — </p>
+      </div>
+      <div class="header-actions">
+        <span class="badge-status">● MySQL Connected (food_order_db)</span>
+        <button class="btn-header" onclick="openAddFoodModal()">
+          <span>➕ Tambah Menu Makanan</span>
+        </button>
+        <button class="btn-header" onclick="openAddRestoModal()">
+          <span>🏪 Tambah Restoran</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchMainTab('tab-catalog')">
+        <span>🍔 Katalog Menu Makanan</span>
+        <span class="badge-count" id="badge-foods-count">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchMainTab('tab-restaurants')">
+        <span>🏪 Daftar Restoran Mitra</span>
+        <span class="badge-count" id="badge-restos-count">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchMainTab('tab-orders')">
+        <span>📦 Pesanan & Live Tracking</span>
+        <span class="badge-count" id="badge-orders-count">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchMainTab('tab-api-tester')">
+        <span>⚡ API Tester (Mode JSON)</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: VISUAL FOOD CATALOG -->
+    <section id="tab-catalog" class="tab-pane">
+      <div class="toolbar">
+        <div class="filter-pills" id="category-pills">
+          <button class="pill active" onclick="filterCategory('Semua', this)">Semua</button>
+          <button class="pill" onclick="filterCategory('Ayam', this)">Ayam</button>
+          <button class="pill" onclick="filterCategory('Nasi', this)">Nasi</button>
+          <button class="pill" onclick="filterCategory('Mie', this)">Mie</button>
+          <button class="pill" onclick="filterCategory('Daging', this)">Daging</button>
+          <button class="pill" onclick="filterCategory('Pizza', this)">Pizza</button>
+          <button class="pill" onclick="filterCategory('Minuman', this)">Minuman</button>
+        </div>
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="food-search-input" placeholder="Cari menu makanan..." oninput="handleSearch(this.value)">
+        </div>
+      </div>
+
+      <!-- Food Cards Grid -->
+      <div class="grid-cards" id="foods-grid">
+        <!-- Rendered by JavaScript dynamically from MySQL API -->
+        <p style="color:var(--text-muted); font-size:14px;">Memuat menu makanan dari database...</p>
+      </div>
+    </section>
+
+    <!-- TAB 2: RESTAURANTS -->
+    <section id="tab-restaurants" class="tab-pane" style="display:none;">
+      <div class="grid-cards" id="restos-grid">
+        <p style="color:var(--text-muted); font-size:14px;">Memuat restoran dari database...</p>
+      </div>
+    </section>
+
+    <!-- TAB 3: ORDERS -->
+    <section id="tab-orders" class="tab-pane" style="display:none;">
+      <div class="tester-card">
+        <h2 style="font-size:18px; margin-bottom:12px;">📦 Riwayat Pesanan Masuk (Live Database)</h2>
+        <div id="orders-list">Memuat pesanan...</div>
+      </div>
+    </section>
+
+    <!-- TAB 4: API TESTER (DEV MODE) -->
+    <section id="tab-api-tester" class="tab-pane" style="display:none;">
+      <div class="tester-card">
+        <h2 style="font-size:18px; margin-bottom:6px;">⚡ Raw API Endpoint Inspector</h2>
+        <p style="color:var(--text-muted); font-size:13px; margin-bottom:18px;">Uji respon JSON mentah langsung dari browser untuk keperluan tugas laporan.</p>
+
+        <div class="endpoint-item">
+          <div class="endpoint-head">
+            <span class="tag-get">GET</span>
+            <span style="flex:1;">/api/foods</span>
+            <button class="btn-action" onclick="testRawEndpoint('GET', '/api/foods', 'res-raw-foods')">Test</button>
+          </div>
+          <pre class="res-box" id="res-raw-foods"></pre>
+        </div>
+
+        <div class="endpoint-item">
+          <div class="endpoint-head">
+            <span class="tag-get">GET</span>
+            <span style="flex:1;">/api/restaurants</span>
+            <button class="btn-action" onclick="testRawEndpoint('GET', '/api/restaurants', 'res-raw-restos')">Test</button>
+          </div>
+          <pre class="res-box" id="res-raw-restos"></pre>
+        </div>
+
+        <div class="endpoint-item">
+          <div class="endpoint-head">
+            <span class="tag-get">GET</span>
+            <span style="flex:1;">/api/cart</span>
+            <button class="btn-action" onclick="testRawEndpoint('GET', '/api/cart', 'res-raw-cart')">Test</button>
+          </div>
+          <pre class="res-box" id="res-raw-cart"></pre>
+        </div>
+
+        <div class="endpoint-item">
+          <div class="endpoint-head">
+            <span class="tag-get">GET</span>
+            <span style="flex:1;">/api/profile</span>
+            <button class="btn-action" onclick="testRawEndpoint('GET', '/api/profile', 'res-raw-profile')">Test</button>
+          </div>
+          <pre class="res-box" id="res-raw-profile"></pre>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL 1: TAMBAH MENU MAKANAN BARU -->
+  <div class="modal-backdrop" id="modal-add-food">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>➕ Tambah Menu Makanan Baru</h3>
+        <button class="btn-close" onclick="closeModal('modal-add-food')">×</button>
+      </div>
+      <form id="form-add-food" onsubmit="submitAddFood(event)">
+        <div class="form-group">
+          <label>Nama Menu Makanan *</label>
+          <input type="text" class="form-control" id="food-name" required placeholder="Contoh: Bebek Sinjay Sambal Pencit">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pilih Restoran *</label>
+            <select class="form-control" id="food-restaurant-id" required>
+              <!-- Diisi otomatis dari DB -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Kategori *</label>
+            <select class="form-control" id="food-category" required>
+              <option value="Ayam">Ayam</option>
+              <option value="Nasi">Nasi</option>
+              <option value="Mie">Mie</option>
+              <option value="Daging">Daging</option>
+              <option value="Pizza">Pizza</option>
+              <option value="Minuman">Minuman</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Harga Jual (Rp) *</label>
+            <input type="number" class="form-control" id="food-price" required placeholder="25000">
+          </div>
+          <div class="form-group">
+            <label>Harga Coret / Asli (Opsional)</label>
+            <input type="number" class="form-control" id="food-original-price" placeholder="30000">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>URL Gambar Makanan (Unsplash / Link Gambar) *</label>
+          <input type="url" class="form-control" id="food-image" required value="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Badge Diskon (Opsional)</label>
+            <input type="text" class="form-control" id="food-discount-badge" placeholder="Contoh: Diskon 20% / Promo">
+          </div>
+          <div class="form-group">
+            <label>Status Popular</label>
+            <select class="form-control" id="food-is-popular">
+              <option value="1">🔥 Menu Populer</option>
+              <option value="0">Menu Biasa</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Deskripsi Rasa & Bahan</label>
+          <textarea class="form-control" id="food-desc" rows="3" placeholder="Jelaskan cita rasa makanan ini..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-add-food')">Batal</button>
+          <button type="submit" class="btn-submit">💾 Simpan ke Database</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: TAMBAH RESTORAN BARU -->
+  <div class="modal-backdrop" id="modal-add-resto">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🏪 Tambah Restoran Mitra Baru</h3>
+        <button class="btn-close" onclick="closeModal('modal-add-resto')">×</button>
+      </div>
+      <form id="form-add-resto" onsubmit="submitAddResto(event)">
+        <div class="form-group">
+          <label>Nama Restoran *</label>
+          <input type="text" class="form-control" id="resto-name" required placeholder="Contoh: Bebek Sinjay Bangkalan">
+        </div>
+        <div class="form-group">
+          <label>Tagline / Slogan</label>
+          <input type="text" class="form-control" id="resto-tagline" placeholder="Bebek Goreng Renyah & Sambal Pencit Juara">
+        </div>
+        <div class="form-group">
+          <label>URL Foto Banner Restoran *</label>
+          <input type="url" class="form-control" id="resto-image" required value="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jarak (km)</label>
+            <input type="text" class="form-control" id="resto-distance" value="1.5 km">
+          </div>
+          <div class="form-group">
+            <label>Estimasi Antar</label>
+            <input type="text" class="form-control" id="resto-time" value="20-25 min">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Alamat Lengkap Restoran</label>
+          <input type="text" class="form-control" id="resto-address" value="Jl. Ketintang Baru No. 10, Surabaya">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeModal('modal-add-resto')">Batal</button>
+          <button type="submit" class="btn-submit">💾 Simpan Restoran</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast"></div>
+
+  <script>
+    let allFoods = [];
+    let allRestaurants = [];
+    let currentCategory = 'Semua';
+
+    // Deteksi Base URL
+    function getApiBase() {
+      const p = window.location.pathname;
+      if (p.includes('food_order_api')) {
+        return p.substring(0, p.indexOf('/food_order_api') + '/food_order_api'.length) + '/api';
+      }
+      return '/api';
+    }
+
+    const API_BASE = getApiBase();
+
+    // Inisialisasi awal saat halaman dibuka
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchFoods();
+      fetchRestaurants();
+      fetchOrders();
+    });
+
+    // 1. Fetch Foods dari Database
+    async function fetchFoods(cat = null) {
+      try {
+        let url = `${API_BASE}/foods`;
+        if (cat && cat !== 'Semua') {
+          url += `?category=${encodeURIComponent(cat)}`;
+        }
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.success) {
+          allFoods = json.data;
+          renderFoods(allFoods);
+          document.getElementById('badge-foods-count').innerText = allFoods.length;
+        }
+      } catch (err) {
+        document.getElementById('foods-grid').innerHTML = `<p style="color:red;">Gagal memuat makanan: ${err.message}</p>`;
+      }
+    }
+
+    // Render Cards Makanan
+    function renderFoods(foods) {
+      const grid = document.getElementById('foods-grid');
+      if (foods.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:40px;">Tidak ada menu makanan dalam kategori ini.</p>';
+        return;
+      }
+
+      grid.innerHTML = foods.map(f => `
+        <div class="food-card" id="food-card-${f.id}">
+          ${f.discount_badge ? `<span class="badge-discount">${escapeHtml(f.discount_badge)}</span>` : ''}
+          ${f.is_popular ? `<span class="badge-popular">🔥 Populer</span>` : ''}
+          <img src="${escapeHtml(f.image_url)}" class="card-thumb" alt="${escapeHtml(f.name)}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600'">
+          <div class="card-body">
+            <span class="card-category">${escapeHtml(f.category)}</span>
+            <h4 class="card-title">${escapeHtml(f.name)}</h4>
+            <div class="card-resto">🏪 ${escapeHtml(f.restaurant_name || 'Resto Mitra')}</div>
+            <p class="card-desc">${escapeHtml(f.description || 'Menu lezat siap antar.')}</p>
+            
+            <div class="card-meta">
+              <span class="rating">⭐ ${f.rating} <span style="color:#94A3B8; font-weight:normal;">(${f.reviews_count})</span></span>
+              <span>🛵 ${escapeHtml(f.delivery_time)} • ${escapeHtml(f.distance)}</span>
+            </div>
+
+            <div class="card-footer">
+              <div class="price-wrap">
+                <span class="price-main">Rp ${formatRupiah(f.price)}</span>
+                ${f.original_price ? `<span class="price-strike">Rp ${formatRupiah(f.original_price)}</span>` : ''}
+              </div>
+              <div class="card-actions">
+                <button class="btn-action" title="Ubah Harga" onclick="quickEditPrice(${f.id}, ${f.price}, '${escapeJs(f.name)}')">✏️ Ubah</button>
+                <button class="btn-action delete" title="Hapus Menu" onclick="deleteFood(${f.id}, '${escapeJs(f.name)}')">🗑️ Hapus</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 2. Fetch Restaurants
+    async function fetchRestaurants() {
+      try {
+        const res = await fetch(`${API_BASE}/restaurants`);
+        const json = await res.json();
+        if (json.success) {
+          allRestaurants = json.data;
+          renderRestaurants(allRestaurants);
+          populateRestoDropdown(allRestaurants);
+          document.getElementById('badge-restos-count').innerText = allRestaurants.length;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderRestaurants(restos) {
+      const grid = document.getElementById('restos-grid');
+      grid.innerHTML = restos.map(r => `
+        <div class="resto-card">
+          <img src="${escapeHtml(r.image_url)}" class="resto-banner" alt="${escapeHtml(r.name)}">
+          <div class="resto-body">
+            <h4 class="resto-title">${escapeHtml(r.name)}</h4>
+            <p class="resto-tagline">${escapeHtml(r.tagline || '')}</p>
+            <div class="resto-info">
+              <span>⭐ ${r.rating} (${r.reviews_count})</span>
+              <span>🛵 ${escapeHtml(r.delivery_time)}</span>
+              <span>📍 ${escapeHtml(r.distance)}</span>
+            </div>
+            <p style="font-size:12px; color:var(--text-muted);">Alamat: ${escapeHtml(r.address)}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function populateRestoDropdown(restos) {
+      const sel = document.getElementById('food-restaurant-id');
+      sel.innerHTML = restos.map(r => `<option value="${r.id}">${escapeHtml(r.name)}</option>`).join('');
+    }
+
+    // 3. Fetch Orders
+    async function fetchOrders() {
+      try {
+        const res = await fetch(`${API_BASE}/orders`);
+        const json = await res.json();
+        if (json.success) {
+          const orders = json.data;
+          document.getElementById('badge-orders-count').innerText = orders.length;
+          const container = document.getElementById('orders-list');
+          if (orders.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted);">Belum ada riwayat pesanan.</p>';
+            return;
+          }
+          container.innerHTML = orders.map(o => `
+            <div style="border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:12px; background:white;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong>${escapeHtml(o.order_number)}</strong>
+                <span style="background:#DCFCE7; color:#15803D; font-size:12px; font-weight:bold; padding:4px 10px; border-radius:8px;">${o.order_status}</span>
+              </div>
+              <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">Resto: <strong>${escapeHtml(o.restaurant_name)}</strong> • Total: <strong style="color:var(--primary);">Rp ${formatRupiah(o.total_amount)}</strong></div>
+              <div style="font-size:12px; color:#475569;">Alamat Kirim: ${escapeHtml(o.delivery_address_text)}</div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 4. POST: Tambah Makanan Baru (Langsung terlihat di katalog)
+    async function submitAddFood(e) {
+      e.preventDefault();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Menyimpan...';
+
+      const restoId = parseInt(document.getElementById('food-restaurant-id').value);
+      const cat = document.getElementById('food-category').value;
+      const payload = {
+        name: document.getElementById('food-name').value.trim(),
+        restaurant_id: restoId,
+        category: cat,
+        category_id: cat === 'Ayam' ? 4 : cat === 'Nasi' ? 2 : cat === 'Mie' ? 3 : cat === 'Daging' ? 5 : cat === 'Pizza' ? 6 : 7,
+        price: parseInt(document.getElementById('food-price').value),
+        original_price: document.getElementById('food-original-price').value ? parseInt(document.getElementById('food-original-price').value) : null,
+        image_url: document.getElementById('food-image').value.trim(),
+        discount_badge: document.getElementById('food-discount-badge').value.trim() || null,
+        is_popular: parseInt(document.getElementById('food-is-popular').value),
+        description: document.getElementById('food-desc').value.trim(),
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/foods`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          showToast(`✅ Menu "${payload.name}" berhasil ditambahkan ke database!`);
+          closeModal('modal-add-food');
+          document.getElementById('form-add-food').reset();
+          // Muat ulang katalog secara visual langsung
+          await fetchFoods();
+        } else {
+          alert('Gagal menambah menu: ' + json.message);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = '💾 Simpan ke Database';
+      }
+    }
+
+    // 5. POST: Tambah Restoran Baru
+    async function submitAddResto(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('resto-name').value.trim(),
+        tagline: document.getElementById('resto-tagline').value.trim(),
+        image_url: document.getElementById('resto-image').value.trim(),
+        distance: document.getElementById('resto-distance').value.trim(),
+        delivery_time: document.getElementById('resto-time').value.trim(),
+        address: document.getElementById('resto-address').value.trim(),
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/restaurants`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          showToast(`✅ Restoran "${payload.name}" berhasil ditambahkan!`);
+          closeModal('modal-add-resto');
+          document.getElementById('form-add-resto').reset();
+          await fetchRestaurants();
+        } else {
+          alert('Gagal: ' + json.message);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // 6. DELETE: Hapus Makanan
+    async function deleteFood(id, name) {
+      if (!confirm(`Apakah Anda yakin ingin menghapus "${name}" dari database MySQL?`)) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/foods/${id}`, { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`🗑️ Menu "${name}" berhasil dihapus.`);
+          // Hapus langsung elemen kartu dari layar dengan animasi
+          const el = document.getElementById(`food-card-${id}`);
+          if (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'scale(0.9)';
+            setTimeout(() => fetchFoods(), 200);
+          }
+        } else {
+          alert('Gagal menghapus: ' + json.message);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // 7. PUT: Ubah Harga
+    async function quickEditPrice(id, oldPrice, name) {
+      const newPriceStr = prompt(`Ubah harga untuk "${name}":`, oldPrice);
+      if (!newPriceStr) return;
+      const newPrice = parseInt(newPriceStr);
+      if (isNaN(newPrice) || newPrice <= 0) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/foods/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ price: newPrice })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`✏️ Harga "${name}" diperbarui menjadi Rp ${formatRupiah(newPrice)}`);
+          fetchFoods();
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // Filter & Search
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('#category-pills .pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      fetchFoods(cat);
+    }
+
+    function handleSearch(keyword) {
+      const term = keyword.toLowerCase().trim();
+      const filtered = allFoods.filter(f => 
+        f.name.toLowerCase().includes(term) || 
+        (f.description && f.description.toLowerCase().includes(term)) ||
+        (f.restaurant_name && f.restaurant_name.toLowerCase().includes(term))
+      );
+      renderFoods(filtered);
+    }
+
+    // Tabs Switcher
+    function switchMainTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      event.currentTarget.classList.add('active');
+    }
+
+    // Raw Endpoint Tester
+    async function testRawEndpoint(method, path, targetId) {
+      const box = document.getElementById(targetId);
+      box.style.display = 'block';
+      box.innerText = 'Mengirim request...';
+      try {
+        const res = await fetch(`${API_BASE}${path}`);
+        const json = await res.json();
+        box.innerText = JSON.stringify(json, null, 2);
+      } catch (err) {
+        box.innerText = 'Error: ' + err.message;
+      }
+    }
+
+    // Modal Helpers
+    function openAddFoodModal() {
+      document.getElementById('modal-add-food').style.display = 'flex';
+    }
+    function openAddRestoModal() {
+      document.getElementById('modal-add-resto').style.display = 'flex';
+    }
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    // Toast Alert
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'flex';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+
+    // Helpers
+    function formatRupiah(val) {
+      return (val || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escapeJs(str) {
+      return (str || '').replace(/'/g, "\\'");
+    }
+  </script>
+</body>
+</html>
